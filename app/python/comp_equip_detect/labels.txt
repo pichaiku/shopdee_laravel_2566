@@ -1,0 +1,4 @@
+0 smartphone
+1 tablet
+2 notebook
+3 pc

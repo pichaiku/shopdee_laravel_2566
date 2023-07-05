@@ -1,0 +1,17 @@
+[
+    {
+        "model-name": "product",
+        "resource-file": "products.json",
+        "table-name": "product"
+    },
+    {
+        "model-name": "customer",
+        "resource-file": "customers.json",
+        "table-name": "customer"
+    },
+    {
+        "model-name": "employee",
+        "resource-file": "employees.json",
+        "table-name": "employee"
+    }
+]
