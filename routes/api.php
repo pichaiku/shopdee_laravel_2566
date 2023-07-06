@@ -14,36 +14,11 @@ use App\Http\Controllers\Api\ProductsController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('customer', [App\Http\Controllers\API\CustomerController::class, 'index']);
-
-Route::get('chat/list/{id}', [App\Http\Controllers\API\ChatController::class, 'list']);
-Route::post('chat/show', [App\Http\Controllers\API\ChatController::class, 'show']);
-Route::post('chat/store', [App\Http\Controllers\API\ChatController::class, 'store']);
-
-
-Route::get('car', [App\Http\Controllers\API\CarController::class, 'index']);
-Route::get('car/show/{id}', [App\Http\Controllers\API\CarController::class, 'show']);
-Route::post('car/rent', [App\Http\Controllers\API\CarController::class, 'rent']);
-
-
-Route::post('chatbot', [App\Http\Controllers\API\LineBotController::class, 'exam']);
-Route::post('pushbot', [App\Http\Controllers\API\LineBotController::class, 'pushBot']);
-
-
-Route::post('car/write', [App\Http\Controllers\API\IotController::class, 'write']);
-Route::get('car/read', [App\Http\Controllers\API\IotController::class, 'read']);
-Route::get('car/control', [App\Http\Controllers\API\IotController::class, 'control']);
-
-Route::get('exam/store', [App\Http\Controllers\API\BookController::class, 'store']);
-Route::post('exam/update/{id}', [App\Http\Controllers\API\BookController::class, 'update']);
-Route::get('exam/show/{id}', [App\Http\Controllers\API\BookController::class, 'show']);
-Route::post('houseprice/predict', [App\Http\Controllers\API\HousePriceController::class, 'predict']);
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('customer', [App\Http\Controllers\API\CustomerController::class, 'index']);
 Route::get('product', [App\Http\Controllers\API\ProductController::class, 'index']);
 Route::post('login', [App\Http\Controllers\API\CustomerController::class, 'login']);
 Route::post('register', [App\Http\Controllers\API\CustomerController::class, 'register']);
@@ -67,19 +42,8 @@ Route::post('payment', [App\Http\Controllers\API\PaymentController::class, 'paym
 // Route::get('payment/{id}', [App\Http\Controllers\API\PaymentController::class, 'view']);
 // Route::put('payment/{id}', [App\Http\Controllers\API\PaymentController::class, 'update']);
 
+//chat
+Route::get('chat/list/{id}', [App\Http\Controllers\API\ChatController::class, 'list']);
+Route::post('chat/show', [App\Http\Controllers\API\ChatController::class, 'show']);
+Route::post('chat/store', [App\Http\Controllers\API\ChatController::class, 'store']);
 
-//Route::resource('photos', [App\Http\Controllers\API\CustomerController::class, 'update']);
-Route::group([
-    'prefix' => 'products',
-], function () {
-    Route::get('/', [ProductsController::class, 'index'])
-         ->name('api.products.product.index');
-    Route::get('/show/{product}',[ProductsController::class, 'show'])
-         ->name('api.products.product.show')->where('id', '[0-9]+');
-    Route::post('/', [ProductsController::class, 'store'])
-         ->name('api.products.product.store');    
-    Route::put('product/{product}', [ProductsController::class, 'update'])
-         ->name('api.products.product.update')->where('id', '[0-9]+');
-    Route::delete('/product/{product}',[ProductsController::class, 'destroy'])
-         ->name('api.products.product.destroy')->where('id', '[0-9]+');
-});

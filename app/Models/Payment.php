@@ -12,7 +12,7 @@ class Payment extends Model
     protected $primaryKey = 'paymentID'; //Ignore automatically query with id as primary key
 
     protected $fillable = [
-        'orderID', 'paymentDate', 'price', 'comment', 'slipFile'
+        'orderID', 'paymentDate', 'price', 'comment', 'slipFile','channelID'
     ];
 
     public static function index($id){
