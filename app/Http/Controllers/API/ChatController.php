@@ -10,7 +10,7 @@ class ChatController extends Controller
     
     public function list($id){
 
-        $sql = "SELECT chat.empID, message, 
+        $sql = "SELECT chat.empID, message, orderID,  
                 CASE
                     WHEN CAST(CURRENT_TIMESTAMP AS DATE) = SUBSTRING(createDate,1,10) THEN CONCAT(DATE_FORMAT(createDate,'%H.%i'),' น.')
                     ELSE DATE_FORMAT(createDate,'%d/%m') 
@@ -33,15 +33,22 @@ class ChatController extends Controller
     public function show(Request $request){
         $custID = $request->get('custID');             
         $empID = $request->get('empID');
+        $orderID = $request->get('orderID');        
 
+        if($empID == "-1"){
+            $empID = $this->getEmpID($custID, $orderID);
+        }
+        
         $sql = "SELECT  message, 
                 CASE
                     WHEN CAST(CURRENT_TIMESTAMP AS DATE) = SUBSTRING(createDate,1,10) THEN CONCAT(DATE_FORMAT(createDate,'%H.%i'),' น.')
                     ELSE DATE_FORMAT(createDate,'%d/%m') 
                 END AS createDate, sender,orderID,imageFile
                 FROM chat 
-                INNER JOIN employee ON chat.empID = employee.empID                            
-                WHERE chat.custID = $custID AND chat.empID = $empID";
+                    INNER JOIN employee ON chat.empID = employee.empID                            
+                    WHERE chat.custID = $custID AND chat.empID = $empID AND chat.orderID = $orderID 
+                ORDER BY msgID DESC";
+        Log::info($sql);
         $chat = DB::select($sql);
 
         return response()->json($chat);
@@ -59,17 +66,39 @@ class ChatController extends Controller
         $orderID = $request->get('orderID');                    
         $sender = "c";   
 
-        if($orderID==""){
-//            echo "xx";die();
-            $orderID = 'NULL';
+        if($empID == "-1"){
+            $empID = $this->getEmpID($custID, $orderID);
         }
                     
         $sql = "INSERT INTO chat(message, createDate, custID, empID, orderID, sender) VALUES 
                 ('$message', '$createDate', $custID, $empID, $orderID, '$sender')";        
-
+        
         DB::insert($sql);
         return response()->json(array('message'=>'success','status'=>'true'));
-    }       
+    }         
+
+    private function getEmpID($CustID, $orderID){
+        $sql = "SELECT chat.empID, COUNT(orderID) AS orderCount 
+        FROM chat INNER JOIN employee ON chat.empID = employee.empID 
+        WHERE custID = $CustID AND orderID = $orderID 
+        GROUP BY chat.empID 
+        ORDER BY orderCount DESC 
+        LIMIT 1;";
+        $result=DB::select($sql);
+
+        $empID = -1;
+        if(count($result) > 0){
+            $empID = $result[0]->empID;
+        }else{
+            $sql = "SELECT empID 
+                    FROM employee 
+                    ORDER BY RAND() 
+                    LIMIT 1";
+            $result=DB::select($sql);
+            $empID = $result[0]->empID;
+        }
+        return $empID;
+    }
 }
 
 

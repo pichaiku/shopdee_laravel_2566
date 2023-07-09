@@ -7,90 +7,9 @@ use DB;
 
 class OrderController extends Controller
 {    
-
-    public function view(Request $request){
-
-    }
-    public function create(Request $request){
-
-    }    
-
-    public function update(Request $request){
-        
-
-    }    
-
-    public function cart($id){        
-        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
-        `receiveDate`, `orders`.`custID`, `statusID`,
-        customer.firstName,customer.lastName,customer.address,customer.mobilePhone,
-        SUM(orderdetail.quantity) AS totalQuantity,
-        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice,
-        COUNT(orderdetail.orderID) AS itemCount 
-        FROM `orders` 
-            INNER JOIN customer ON customer.custID=`orders`.custID         
-            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
-        WHERE orders.custID=$id  AND orders.statusID=0 
-        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
-            `receiveDate`, `orders`.`custID`, `statusID`,
-            customer.firstName,customer.lastName,customer.address,customer.mobilePhone";
-          
-        return DB::select($sql);        
-    }
-
-    public function orderlist($id){        
-        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
-        `receiveDate`, `orders`.`custID`, `statusID`,
-        customer.firstName,customer.lastName,
-        SUM(orderdetail.quantity) AS totalQuantity,
-        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice 
-        FROM `orders` 
-            INNER JOIN customer ON customer.custID=`orders`.custID         
-            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
-        WHERE orders.custID=$id and orders.statusID <> 0 
-        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
-            `receiveDate`, `orders`.`custID`, `statusID`,
-            customer.firstName,customer.lastName     
-        ORDER BY `orders`.orderID ASC ";
-          
-        return DB::select($sql);        
-    }
-    public function orderinfo($id){        
-        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
-        `receiveDate`, `orders`.`custID`, `statusID`,
-        customer.firstName,customer.lastName,customer.address,customer.mobilePhone,
-        SUM(orderdetail.quantity) AS totalQuantity,
-        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice 
-        FROM `orders` 
-            INNER JOIN customer ON customer.custID=`orders`.custID         
-            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
-        WHERE orders.orderID=$id 
-        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
-            `receiveDate`, `orders`.`custID`, `statusID`,
-            customer.firstName,customer.lastName,customer.address,customer.mobilePhone      
-         ";
-          
-        return DB::select($sql);        
-    }
-
-    //function confirm order
-    public function confirmorder(Request $request){
-        $orderDate = date("y-m-d H:i:s");
-        
-        $sql = "UPDATE orders 
-                SET orderDate = '$orderDate', statusID = 1 
-                WHERE orderID = ".$request->get("orderID");
-        DB::update($sql);
-
-        return response()->json(
-            array('message' => 'success','status' => 'true')
-        );        
-    }
-
-    public function order(Request $request)
+    //เพิ่มสินค้าเข้าตะกร้า
+    public function makeorder(Request $request)
     {
-
-
         $custID = $request->get("custID");
         $productID = $request->get("productID");
         $quantity = $request->get("quantity");
@@ -139,7 +58,75 @@ class OrderController extends Controller
 
     }
 
+    //ยืนยันการสั่งซื้อ
+    public function confirmorder(Request $request){
+        $orderDate = date("y-m-d H:i:s");
+        
+        $sql = "UPDATE orders 
+                SET orderDate = '$orderDate', statusID = 1 
+                WHERE orderID = ".$request->get("orderID");
+        DB::update($sql);
 
-  
+        return response()->json(
+            array('message' => 'success','status' => 'true')
+        );        
+    }
+
+    //แสดงข้อมูลการสั่งซื้อที่อยู่ในตะกร้า
+    public function cart($id){        
+        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
+        `receiveDate`, `orders`.`custID`, `statusID`,
+        customer.firstName,customer.lastName,customer.address,customer.mobilePhone,
+        SUM(orderdetail.quantity) AS totalQuantity,
+        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice,
+        COUNT(orderdetail.orderID) AS itemCount 
+        FROM `orders` 
+            INNER JOIN customer ON customer.custID=`orders`.custID         
+            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
+        WHERE orders.custID=$id  AND orders.statusID=0 
+        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
+            `receiveDate`, `orders`.`custID`, `statusID`,
+            customer.firstName,customer.lastName,customer.address,customer.mobilePhone";
+          
+        return DB::select($sql);        
+    }
+
+    //แสดงรายการประวัติการสั่งซื้อ
+    public function history($id){        
+        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
+        `receiveDate`, `orders`.`custID`, `statusID`,
+        customer.firstName,customer.lastName,
+        SUM(orderdetail.quantity) AS totalQuantity,
+        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice 
+        FROM `orders` 
+            INNER JOIN customer ON customer.custID=`orders`.custID         
+            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
+        WHERE orders.custID=$id and orders.statusID <> 0 
+        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
+            `receiveDate`, `orders`.`custID`, `statusID`,
+            customer.firstName,customer.lastName     
+        ORDER BY `orders`.orderID DESC ";
+          
+        return DB::select($sql);        
+    }
+
+    //แสดงข้อมูลการสั่งซื้อ ของรายการที่เลือก
+    public function orderinfo($id){        
+        $sql = "SELECT `orders`.`orderID`, `orderDate`, `shipDate`, 
+        `receiveDate`, `orders`.`custID`, `statusID`,
+        customer.firstName,customer.lastName,customer.address,customer.mobilePhone,
+        SUM(orderdetail.quantity) AS totalQuantity,
+        SUM(orderdetail.quantity*orderdetail.price) AS totalPrice 
+        FROM `orders` 
+            INNER JOIN customer ON customer.custID=`orders`.custID         
+            INNER JOIN orderdetail ON `orders`.`orderID`=orderdetail.orderID 
+        WHERE orders.orderID=$id 
+        GROUP BY `orders`.`orderID`, `orderDate`, `shipDate`, 
+            `receiveDate`, `orders`.`custID`, `statusID`,
+            customer.firstName,customer.lastName,customer.address,customer.mobilePhone      
+         ";
+          
+        return DB::select($sql);        
+    }
 
 }

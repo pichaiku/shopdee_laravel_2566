@@ -18,32 +18,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//customer
 Route::get('customer', [App\Http\Controllers\API\CustomerController::class, 'index']);
-Route::get('product', [App\Http\Controllers\API\ProductController::class, 'index']);
-Route::post('login', [App\Http\Controllers\API\CustomerController::class, 'login']);
 Route::post('register', [App\Http\Controllers\API\CustomerController::class, 'register']);
+Route::post('login', [App\Http\Controllers\API\CustomerController::class, 'login']);
 Route::get('profile/{id}', [App\Http\Controllers\API\CustomerController::class, 'profile']);
 Route::post('customer', [App\Http\Controllers\API\CustomerController::class, 'update']);
-//Route::get('product', [App\Http\Controllers\API\ProductController::class, 'index']);
-Route::get('product/{id}', [App\Http\Controllers\API\ProductController::class, 'show']);
-Route::post('order', [App\Http\Controllers\API\OrderController::class, 'order']);
-Route::get('orderlist/{id}', [App\Http\Controllers\API\OrderController::class, 'orderlist']);
-Route::get('orderinfo/{id}', [App\Http\Controllers\API\OrderController::class, 'orderinfo']);
-Route::get('orderdetail/{id}', [App\Http\Controllers\API\OrderdetailController::class, 'orderdetail']);
-Route::post('confirmorder', [App\Http\Controllers\API\OrderController::class, 'confirmorder']);
 
-Route::get('monthlySale/{id}', [App\Http\Controllers\API\ReportController::class, 'monthlySale']);
-Route::get('topFiveProduct/{id}', [App\Http\Controllers\API\ReportController::class, 'topFiveProduct']);
+//product
+Route::get('product', [App\Http\Controllers\API\ProductController::class, 'index']);
+Route::get('product/{id}', [App\Http\Controllers\API\ProductController::class, 'show']);
+
+//order
+Route::post('makeorder', [App\Http\Controllers\API\OrderController::class, 'makeorder']);
+Route::post('confirmorder', [App\Http\Controllers\API\OrderController::class, 'confirmorder']);
 Route::get('cart/{id}', [App\Http\Controllers\API\OrderController::class, 'cart']);
+Route::get('orderdetail/{id}', [App\Http\Controllers\API\OrderdetailController::class, 'orderdetail']);
+Route::get('history/{id}', [App\Http\Controllers\API\OrderController::class, 'history']);
+Route::get('orderinfo/{id}', [App\Http\Controllers\API\OrderController::class, 'orderinfo']);
 
 //payment
 Route::post('payment', [App\Http\Controllers\API\PaymentController::class, 'payment']);
-// Route::get('payment', [App\Http\Controllers\API\PaymentController::class, 'index']);
-// Route::get('payment/{id}', [App\Http\Controllers\API\PaymentController::class, 'view']);
-// Route::put('payment/{id}', [App\Http\Controllers\API\PaymentController::class, 'update']);
+
+//dashboard
+Route::get('monthlySale/{id}', [App\Http\Controllers\API\ReportController::class, 'monthlySale']);
+Route::get('topFiveProduct/{id}', [App\Http\Controllers\API\ReportController::class, 'topFiveProduct']);
 
 //chat
 Route::get('chat/list/{id}', [App\Http\Controllers\API\ChatController::class, 'list']);
-Route::post('chat/show', [App\Http\Controllers\API\ChatController::class, 'show']);
 Route::post('chat/store', [App\Http\Controllers\API\ChatController::class, 'store']);
+Route::post('chat/show', [App\Http\Controllers\API\ChatController::class, 'show']);
 
