@@ -35,7 +35,16 @@ class ChatController extends Controller
         $empID = $request->get('empID');
         $orderID = $request->get('orderID');        
 
-        if($empID == "-1"){
+        $sql = "SELECT  chat.empID 
+            FROM chat 
+            INNER JOIN employee ON chat.empID = employee.empID 
+            WHERE chat.custID = $custID AND chat.orderID = $orderID 
+            LIMIT 1";  
+        $result = DB::select($sql);
+
+        if(count($result) > 0){
+            $empID = $result[0]->empID;
+        }else{
             $empID = $this->getEmpID();
         }
         
@@ -47,7 +56,7 @@ class ChatController extends Controller
                 FROM chat 
                     INNER JOIN employee ON chat.empID = employee.empID                            
                     WHERE chat.custID = $custID AND chat.empID = $empID AND chat.orderID = $orderID 
-                ORDER BY msgID DESC";
+                ORDER BY msgID ASC";
         //Log::info($sql);
         $chat = DB::select($sql);
 
@@ -66,7 +75,16 @@ class ChatController extends Controller
         $orderID = $request->get('orderID');                    
         $sender = "c";   
 
-        if($empID == "-1"){
+        $sql = "SELECT  chat.empID 
+            FROM chat 
+            INNER JOIN employee ON chat.empID = employee.empID 
+            WHERE chat.custID = $custID AND chat.orderID = $orderID 
+            LIMIT 1";  
+        $result = DB::select($sql);
+
+        if(count($result) > 0){
+            $empID = $result[0]->empID;
+        }else{
             $empID = $this->getEmpID();
         }
                     
