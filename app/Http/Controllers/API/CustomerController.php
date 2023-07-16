@@ -58,7 +58,7 @@ class CustomerController extends Controller
         $password = $request->get('password');
 
         $sql = "SELECT * FROM customer WHERE username='$username' AND 
-                password = '$password' ";
+                password = '$password' AND isActive=1";
         $users=DB::select($sql);
 
         if($users){

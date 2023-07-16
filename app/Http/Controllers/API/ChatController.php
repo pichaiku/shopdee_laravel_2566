@@ -36,7 +36,7 @@ class ChatController extends Controller
         $orderID = $request->get('orderID');        
 
         if($empID == "-1"){
-            $empID = $this->getEmpID($custID, $orderID);
+            $empID = $this->getEmpID();
         }
         
         $sql = "SELECT  message, 
@@ -48,7 +48,7 @@ class ChatController extends Controller
                     INNER JOIN employee ON chat.empID = employee.empID                            
                     WHERE chat.custID = $custID AND chat.empID = $empID AND chat.orderID = $orderID 
                 ORDER BY msgID DESC";
-        Log::info($sql);
+        //Log::info($sql);
         $chat = DB::select($sql);
 
         return response()->json($chat);
@@ -67,7 +67,7 @@ class ChatController extends Controller
         $sender = "c";   
 
         if($empID == "-1"){
-            $empID = $this->getEmpID($custID, $orderID);
+            $empID = $this->getEmpID();
         }
                     
         $sql = "INSERT INTO chat(message, createDate, custID, empID, orderID, sender) VALUES 
@@ -77,13 +77,19 @@ class ChatController extends Controller
         return response()->json(array('message'=>'success','status'=>'true'));
     }         
 
-    private function getEmpID($CustID, $orderID){
-        $sql = "SELECT chat.empID, COUNT(orderID) AS orderCount 
-        FROM chat INNER JOIN employee ON chat.empID = employee.empID 
-        WHERE custID = $CustID AND orderID = $orderID 
-        GROUP BY chat.empID 
-        ORDER BY orderCount DESC 
+    private function getEmpID(){
+        // $sql = "SELECT chat.empID, COUNT(orderID) AS orderCount 
+        // FROM chat INNER JOIN employee ON chat.empID = employee.empID 
+        // WHERE custID = $CustID AND orderID = $orderID 
+        // GROUP BY chat.empID 
+        // ORDER BY orderCount DESC 
+        // LIMIT 1;";
+        $sql = "SELECT employee.empID, COUNT(orderID) AS orderCount 
+        FROM employee LEFT JOIN chat ON employee.empID = chat.empID         
+        GROUP BY employee.empID 
+        ORDER BY orderCount ASC 
         LIMIT 1;";
+
         $result=DB::select($sql);
 
         $empID = -1;
