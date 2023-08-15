@@ -19,6 +19,10 @@ use App\Http\Controllers\EmployeesController;
 //welcome
 Route::get('/', function () {return view('welcome');});
 
+//login
+Route::get('/admin/login', [App\Http\Controllers\EmployeeController::class, 'login'])->name('admin.login');
+Route::post('/admin/signin', [App\Http\Controllers\EmployeeController::class, 'signin'])->name('admin.signin');
+
 //dashboard
 Route::get('/admin', [App\Http\Controllers\DashboardController::class, 'index'])->name('admin.dashboard');
 

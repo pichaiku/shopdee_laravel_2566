@@ -5,9 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
+use DB;
 
 class EmployeeController extends Controller
 {
+    public function login()
+    {
+        return view("admin.login");
+    }
+
+    public function signin(Request $request)
+    {
+        $username = $request->get('username');
+        $password = $request->get('password');
+
+        $sql = "SELECT * FROM employee WHERE username='$username' AND 
+                password = '$password'";
+        //echo $sql;die();
+        $users=DB::select($sql);
+
+        if($users){
+            return redirect("/admin")->with("success","เข้าสู่ระบบสำเร็จ");
+        }else{
+            return redirect("/admin/login")->with("fail","ชื่อผู้ใช้และรหัสผ่านไม่ถูกต้อง");
+        }
+        
+    }
+
     /**
      * Display a listing of the resource.
      *

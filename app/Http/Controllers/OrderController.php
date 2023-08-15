@@ -66,9 +66,9 @@ class OrderController extends Controller
     public function edit($id)
     {
         $order = Order::find($id);
-        $ordertypes = OrderType::all();
+        //$ordertypes = OrderType::all();
 
-        return view("admin.order.edit", compact("order","ordertypes"));
+        return view("admin.order.edit", compact("order"));
     }
 
 
