@@ -31,11 +31,29 @@
   @endif    
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <b>ระบบซื้อขายออนไลน์</b>
+      <b>ลงทะเบียน ระบบซื้อขายออนไลน์</b>
     </div>
     <div class="card-body">
-      <form action="{{ route('admin.signin') }}" method="post">
+      <form action="{{ route('signup') }}" method="post">
         @csrf
+        <div class="input-group mb-3">
+          <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group mb-3">
+          <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last name">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+                
         <div class="input-group mb-3">
           <input type="username" id="username" name="username" class="form-control" placeholder="ชื่อผู้ใช้">
           <div class="input-group-append">
@@ -52,18 +70,12 @@
             </div>
           </div>
         </div>
+
         <div class="row">
-          <div class="col-8">
-            <div class="icheck-primary">
-              <input type="checkbox" id="remember">
-              <label for="remember">
-                จำรหัสผ่าน
-              </label>
-            </div>
-          </div>
+   
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" id="btnLogin" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+            <button type="submit" id="btnRegister" class="btn btn-primary btn-block">ลงทะเบียน</button>
           </div>
           <!-- /.col -->
         </div>

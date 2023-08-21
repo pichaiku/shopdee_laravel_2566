@@ -166,11 +166,12 @@
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <img src="/assets/employee/img2.jpg" class="img-circle elevation-2" alt="วิชัย ใจซื่อ">
+      <div class="image" id="valid_login">
+        <img src="/assets/employee/<?=Session::get('ss_imageFile', 'imageFile')?>" 
+              class="img-circle elevation-2" alt="วิชัย ใจซื่อ">
       </div>
-      <div class="info">
-        <a href="#" class="d-block">วิชัย ใจซื่อ</a>
+      <div class="info d-block">
+        <a href="#">{{Session::get('ss_firstName', "admin")}} {{Session::get('ss_lastName', "admin")}}</a> <span style="color:#FFFFFF;"> | </span> <a href="/admin/login" id="linkLogout">logout</a>
       </div>
     </div>
 

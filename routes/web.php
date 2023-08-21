@@ -19,6 +19,11 @@ use App\Http\Controllers\EmployeesController;
 //welcome
 Route::get('/', function () {return view('welcome');});
 
+//register
+Route::get('/register', [App\Http\Controllers\CustomerController::class, 'register'])->name('register');
+Route::post('/signup', [App\Http\Controllers\CustomerController::class, 'signup'])->name('signup');
+
+
 //login
 Route::get('/admin/login', [App\Http\Controllers\EmployeeController::class, 'login'])->name('admin.login');
 Route::post('/admin/signin', [App\Http\Controllers\EmployeeController::class, 'signin'])->name('admin.signin');

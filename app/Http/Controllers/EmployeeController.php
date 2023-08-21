@@ -6,6 +6,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use DB;
+use Session;
 
 class EmployeeController extends Controller
 {
@@ -25,6 +26,10 @@ class EmployeeController extends Controller
         $users=DB::select($sql);
 
         if($users){
+            Session::put('ss_username', $users[0]->username);
+            Session::put('ss_firstName', $users[0]->firstName);
+            Session::put('ss_lastName', $users[0]->lastName);
+            Session::put('ss_imageFile', $users[0]->imageFile);
             return redirect("/admin")->with("success","เข้าสู่ระบบสำเร็จ");
         }else{
             return redirect("/admin/login")->with("fail","ชื่อผู้ใช้และรหัสผ่านไม่ถูกต้อง");

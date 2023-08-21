@@ -5,9 +5,51 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomerRequest;
+use DB;
 
 class CustomerController extends Controller
 {
+    public function register()
+    {
+        return view("register");
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function signup(Request $request)
+    {
+        // $this->validate($request, [
+        //     'file' => 'image' 
+        // ]);
+
+        $username = $request->get("username");
+        $password = $request->get("password");
+        $firstName = $request->get("firstName");
+        $lastName = $request->get("lastName");
+
+
+        //check existing user
+        $sql="SELECT * FROM customer WHERE username='$username'";
+        $cust=DB::select($sql);
+
+        if(count($cust)==0)//no-existing user
+        {
+            $customer = new Customer();
+            $customer->username = $username;
+            $customer->password = $password;
+            $customer->firstName = $firstName;
+            $customer->lastName = $lastName;
+            $customer->save();
+            return redirect("/")->with("success","คุณได้ทำการลงทะเบียนเรียบร้อยแล้ว");
+        }else{
+            return redirect("/register")->with("fail","ชื่อผู้ใช้ซ้ำ");
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
